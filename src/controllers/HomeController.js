@@ -1,16 +1,17 @@
-const Student = require('../models/Student');
+const Contact = require('../models/Contact');
 
 class HomeController {
     async index(req, res) {
-        const newStudent = await Student.create({
+        const newContact = await Contact.create({
             first_name: 'Fernanda',
             last_name: 'Ramos',
-            email: 'fernandaoliveira.rms@gmail.com',
+            email: 'framos@gmail.com',
             age: 23,
             phone: '123456789',
+            user_id: 1,
         });
 
-        res.json(newStudent);
+        res.json(newContact);
     }
 }
 

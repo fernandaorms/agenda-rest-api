@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Student = require('../models/Student');
+const Contact = require('../models/Contact');
 
 class UserController {
     async create(req, res) {
@@ -79,11 +79,11 @@ class UserController {
                 });
             }
 
-            const students = await Student.findAll({ where: { user_id: user.id } });
+            const contacts = await Contact.findAll({ where: { user_id: user.id } });
 
-            if(students) {
+            if(contacts) {
                 return res.status(409).json({
-                    errors: ['You need to remove associated students before deleting your account.'] 
+                    errors: ['You need to remove associated contacts before deleting your account.'] 
                 });
             }
 

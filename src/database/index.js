@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 const databaseConfig = require('../config/database');
-const Student = require('../models/Student');
+const Contact = require('../models/Contact');
 const User = require('../models/User');
 
-const models = [Student, User];
+const models = [Contact, User];
 const connection = new Sequelize(databaseConfig);
 
 models.forEach(model => model.init(connection));
+models.forEach(model => model.associate && model.associate(connection.models));
