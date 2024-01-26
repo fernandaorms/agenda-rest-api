@@ -1,8 +1,16 @@
+const Student = require('../models/Student');
+
 class HomeController {
-    index(req, res) {
-        res.status(200).json({
-            key: true,
-        })
+    async index(req, res) {
+        const newStudent = await Student.create({
+            first_name: 'Fernanda',
+            last_name: 'Ramos',
+            email: 'fernandaoliveira.rms@gmail.com',
+            age: 23,
+            phone: '123456789',
+        });
+
+        res.json(newStudent);
     }
 }
 
