@@ -2,17 +2,18 @@ const PNF = require('google-libphonenumber').PhoneNumberFormat;
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 const Contact = require('../models/Contact');
+const Photo = require('../models/Photo');
 const phoneValidation = require('../utils/phoneValidation');
 
 class ContactController {
     async create(req, res) {
         try {
-            const { first_name, last_name, email, phone_region, phone_number } = req.body;
-            const user_id = req.userId;
-            let phone = null;
+            const { phone, created_at, updated_at, user_id, ...body } = req.body;
 
-            if(phone_number) {
-                const formattedNumber = phoneValidation(phone_number, phone_region ? phone_region : 'BR');
+            body.user_id = req.userId;
+
+            if(body.phone_number) {
+                const formattedNumber = phoneValidation(body.phone_number, body.phone_region ? body.phone_region : 'BR');
                 
                 if(!formattedNumber) {
                     return res.status(400).json({
@@ -20,12 +21,23 @@ class ContactController {
                     });
                 }
 
-                phone = formattedNumber;
+                body.phone = formattedNumber;
             }
 
-            const newContact = await Contact.create({ first_name, last_name, email, phone, user_id });
+            if(body.profile_picture_id) {
+                const photo = await Photo.findOne({ where: { id: body.profile_picture_id, user_id: body.user_id } });
+
+                if (!photo) {
+                    return res.status(400).json({
+                        errors: ['Photo doesn\'t exist.']
+                    });
+                }
+            }
+
+            const newContact = await Contact.create(body);
 
             return res.json(newContact);
+
         } catch(e) {
             return res.status(400).json({ 
                 errors: e.errors.map((err) => err.message) 
@@ -35,10 +47,21 @@ class ContactController {
 
     async index(req, res) {
         try {
-            const contacts = await Contact.findAll({ where: { user_id: req.userId } });
+            const contacts = await Contact.findAll({ 
+                where: { user_id: req.userId },
+                attributes: [ 'id', 'first_name', 'last_name', 'email', 'phone' ],
+                order: [['first_name', 'ASC'], ['last_name', 'ASC'],],
+                include: [
+                    {
+                        model: Photo,
+                        attributes: ['id', 'originalname', 'filename'],
+                        as: 'profile_picture',
+                    },
+                ],
+            });
 
             return res.json(contacts);
-            
+
         } catch(e) {
             return res.status(400).json({ 
                 errors: e.errors.map((err) => err.message) 
@@ -48,7 +71,16 @@ class ContactController {
 
     async show(req, res) {
         try {
-            const contact = await Contact.findByPk(req.params.id);
+            const contact = await Contact.findByPk(req.params.id, {
+                attributes: [ 'id', 'first_name', 'last_name', 'email', 'phone' ],
+                include: [
+                    {
+                        model: Photo,
+                        attributes: ['id', 'originalname', 'filename'],
+                        as: 'profile_picture',
+                    },
+                ],
+            });
 
             if(!contact) {
                 return res.status(400).json({ 
@@ -57,6 +89,7 @@ class ContactController {
             }
 
             return res.json(contact);
+
         } catch(e) {
             return res.json(null);
         }
@@ -72,11 +105,10 @@ class ContactController {
                 });
             }
 
-            const { first_name, last_name, email, phone_region, phone_number } = req.body;
-            let phone = null;
+            const { phone, created_at, updated_at, user_id, ...body } = req.body;
 
-            if(phone_number) {
-                const formattedNumber = phoneValidation(phone_number, phone_region ? phone_region : 'BR');
+            if(body.phone_number) {
+                const formattedNumber = phoneValidation(body.phone_number, body.phone_region ? body.phone_region : 'BR');
                 
                 if(!formattedNumber) {
                     return res.status(400).json({
@@ -84,11 +116,20 @@ class ContactController {
                     });
                 }
 
-                phone = formattedNumber;
+                body.phone = formattedNumber;
             }
 
+            if(body.profile_picture_id) {
+                const photo = await Photo.findOne({ where: { id: body.profile_picture_id, user_id: contact.user_id } });
 
-            const updatedContact = await contact.update({ first_name, last_name, email, phone });
+                if (!photo) {
+                    return res.status(400).json({
+                        errors: ['Photo doesn\'t exist.']
+                    });
+                }
+            }
+
+            const updatedContact = await contact.update(body);
 
             return res.json(updatedContact);
         } catch(e) {
@@ -110,16 +151,13 @@ class ContactController {
 
             await contact.destroy();
 
-            return res.json({ delete: true });
+            return res.json({ deleted: true });
         } catch(e) {
             return res.status(400).json({ 
                 errors: e.errors.map((err) => err.message) 
             });
         }
     }
-
-
-
 }
 
 module.exports = new ContactController();

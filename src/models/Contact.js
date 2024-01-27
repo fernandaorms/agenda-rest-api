@@ -49,6 +49,10 @@ class Contact extends Model {
                 defaultValue: '',
             },
             user_id: Sequelize.INTEGER,
+            profile_picture_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
         }, {
             sequelize,
         });
@@ -58,6 +62,7 @@ class Contact extends Model {
 
     static associate(models) {
         this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+        this.belongsTo(models.Photo, { foreignKey: 'profile_picture_id', as: 'profile_picture'});
     }
 }
 
