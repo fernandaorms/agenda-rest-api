@@ -63,9 +63,7 @@ class ContactController {
             return res.json(contacts);
 
         } catch(e) {
-            return res.status(400).json({ 
-                errors: e.errors.map((err) => err.message) 
-            });
+            return res.json(null);
         }
     }
 
