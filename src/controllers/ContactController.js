@@ -1,6 +1,3 @@
-const PNF = require('google-libphonenumber').PhoneNumberFormat;
-const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-
 const Contact = require('../models/Contact');
 const Photo = require('../models/Photo');
 const phoneValidation = require('../utils/phoneValidation');
@@ -54,7 +51,7 @@ class ContactController {
                 include: [
                     {
                         model: Photo,
-                        attributes: ['id', 'originalname', 'filename'],
+                        attributes: ['id', 'originalname', 'filename', 'url'],
                         as: 'profile_picture',
                     },
                 ],
@@ -78,7 +75,7 @@ class ContactController {
                 include: [
                     {
                         model: Photo,
-                        attributes: ['id', 'originalname', 'filename'],
+                        attributes: ['id', 'originalname', 'filename', 'url'],
                         as: 'profile_picture',
                     },
                 ],

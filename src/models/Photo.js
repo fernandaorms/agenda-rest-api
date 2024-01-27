@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const { Model } = require('sequelize');
 
+const { images_url } = require('../config/appConfig');
+
 class Photo extends Model {
     static init(sequelize) {
         super.init({
@@ -25,6 +27,12 @@ class Photo extends Model {
                 },
             },
             user_id: Sequelize.INTEGER,
+            url: {
+                type: Sequelize.VIRTUAL,
+                get() {
+                    return images_url + this.getDataValue('filename');
+                }
+            }
         }, {
             sequelize,
         });

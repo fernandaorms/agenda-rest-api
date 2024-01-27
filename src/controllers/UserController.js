@@ -27,12 +27,12 @@ class UserController {
                 include: [
                     {
                         model: Photo,
-                        attributes: ['id', 'originalname', 'filename'],
+                        attributes: ['id', 'originalname', 'filename', 'url'],
                         as: 'profile_picture',
                     },
                     {
                         model: Photo,
-                        attributes: ['id', 'originalname', 'filename'],
+                        attributes: ['id', 'originalname', 'filename', 'url'],
                         as: 'photos',
                     },
                 ],
@@ -52,12 +52,12 @@ class UserController {
                 include: [
                     {
                         model: Photo,
-                        attributes: ['id', 'originalname', 'filename'],
+                        attributes: ['id', 'originalname', 'filename', 'url'],
                         as: 'profile_picture',
                     },
                     {
                         model: Photo,
-                        attributes: ['id', 'originalname', 'filename'],
+                        attributes: ['id', 'originalname', 'filename', 'url'],
                         as: 'photos',
                     },
                 ],
