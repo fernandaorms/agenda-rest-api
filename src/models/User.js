@@ -55,6 +55,10 @@ class User extends Model {
                     }
                 },
             },
+            profile_picture_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
         }, {
             sequelize,
         });
@@ -70,6 +74,11 @@ class User extends Model {
 
     passwordIsValid(password) {
         return bcryptjs.compare(password, this.password_hash);
+    }
+
+    static associate(models) {
+        this.belongsTo(models.Photo, { foreignKey: 'profile_picture_id', as: 'profile_picture' });
+        this.hasMany(models.Photo, { foreignKey: 'user_id', as: 'photos'});
     }
 }
 
