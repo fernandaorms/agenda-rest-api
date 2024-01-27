@@ -82,12 +82,7 @@ class UserController {
             const { password_hash, created_at, updated_at, ...body } = req.body;
 
             if (body.profile_picture_id) {
-                const photo = await Photo.findOne({
-                    where: {
-                        id: body.profile_picture_id,
-                        user_id: user.id,
-                    },
-                });
+                const photo = await Photo.findOne({ where: { id: body.profile_picture_id, user_id: user.id } });
 
                 if (!photo) {
                     return res.status(400).json({
