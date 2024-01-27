@@ -27,10 +27,12 @@ class UserController {
                 include: [
                     {
                         model: Photo,
+                        attributes: ['id', 'originalname', 'filename'],
                         as: 'profile_picture',
                     },
                     {
                         model: Photo,
+                        attributes: ['id', 'originalname', 'filename'],
                         as: 'photos',
                     },
                 ],
@@ -50,10 +52,12 @@ class UserController {
                 include: [
                     {
                         model: Photo,
+                        attributes: ['id', 'originalname', 'filename'],
                         as: 'profile_picture',
                     },
                     {
                         model: Photo,
+                        attributes: ['id', 'originalname', 'filename'],
                         as: 'photos',
                     },
                 ],
@@ -128,7 +132,7 @@ class UserController {
             await user.destroy();
 
             return res.json({ delete: true });
-            
+
         } catch (e) {
             return res.status(400).json({
                 errors: e.errors.map((err) => err.message)
