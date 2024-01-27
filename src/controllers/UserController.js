@@ -12,6 +12,7 @@ class UserController {
             const { id, first_name, last_name, email } = newUser;
 
             return res.json({ id, first_name, last_name, email });
+
         } catch (e) {
             return res.status(400).json({
                 errors: e.errors.map((err) => err.message)
@@ -36,6 +37,7 @@ class UserController {
             });
 
             return res.json(users);
+
         } catch (e) {
             return res.json(null);
         }
@@ -64,6 +66,7 @@ class UserController {
             }
 
             return res.json(user);
+
         } catch (e) {
             return res.json(e);
         }
@@ -125,6 +128,7 @@ class UserController {
             await user.destroy();
 
             return res.json({ delete: true });
+            
         } catch (e) {
             return res.status(400).json({
                 errors: e.errors.map((err) => err.message)
