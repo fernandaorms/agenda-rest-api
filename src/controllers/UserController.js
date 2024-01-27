@@ -131,7 +131,7 @@ class UserController {
 
             await user.destroy();
 
-            return res.json({ delete: true });
+            return res.json({ deleted: true });
 
         } catch (e) {
             return res.status(400).json({
