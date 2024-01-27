@@ -12,10 +12,10 @@ class ContactController {
 
             body.user_id = req.userId;
 
-            if(body.phone_number) {
+            if (body.phone_number) {
                 const formattedNumber = phoneValidation(body.phone_number, body.phone_region ? body.phone_region : 'BR');
-                
-                if(!formattedNumber) {
+
+                if (!formattedNumber) {
                     return res.status(400).json({
                         errors: ['Invalid phone number for the provided region.']
                     });
@@ -24,7 +24,7 @@ class ContactController {
                 body.phone = formattedNumber;
             }
 
-            if(body.profile_picture_id) {
+            if (body.profile_picture_id) {
                 const photo = await Photo.findOne({ where: { id: body.profile_picture_id, user_id: body.user_id } });
 
                 if (!photo) {
@@ -38,18 +38,18 @@ class ContactController {
 
             return res.json(newContact);
 
-        } catch(e) {
-            return res.status(400).json({ 
-                errors: e.errors.map((err) => err.message) 
+        } catch (e) {
+            return res.status(400).json({
+                errors: e.errors.map((err) => err.message)
             });
         }
     }
 
     async index(req, res) {
         try {
-            const contacts = await Contact.findAll({ 
+            const contacts = await Contact.findAll({
                 where: { user_id: req.userId },
-                attributes: [ 'id', 'first_name', 'last_name', 'email', 'phone' ],
+                attributes: ['id', 'first_name', 'last_name', 'email', 'phone'],
                 order: [['first_name', 'ASC'], ['last_name', 'ASC'],],
                 include: [
                     {
@@ -62,15 +62,19 @@ class ContactController {
 
             return res.json(contacts);
 
-        } catch(e) {
+        } catch (e) {
             return res.json(null);
         }
     }
 
     async show(req, res) {
         try {
-            const contact = await Contact.findByPk(req.params.id, {
-                attributes: [ 'id', 'first_name', 'last_name', 'email', 'phone' ],
+            const contact = await Contact.findOne({
+                where: {
+                    id: req.params.id,
+                    user_id: req.userId,
+                },
+                attributes: ['id', 'first_name', 'last_name', 'email', 'phone'],
                 include: [
                     {
                         model: Photo,
@@ -80,35 +84,35 @@ class ContactController {
                 ],
             });
 
-            if(!contact) {
-                return res.status(400).json({ 
-                    errors: ['Contact doesn\'t exist.'] 
+            if (!contact) {
+                return res.status(400).json({
+                    errors: ['Contact doesn\'t exist.']
                 });
             }
 
             return res.json(contact);
 
-        } catch(e) {
+        } catch (e) {
             return res.json(null);
         }
     }
 
     async update(req, res) {
         try {
-            const contact = await Contact.findByPk(req.params.id);
+            const contact = await Contact.findOne({ where: { id: req.params.id, user_id: req.userId } });
 
-            if(!contact) {
-                return res.status(400).json({ 
-                    errors: ['Contact doesn\'t exist.'] 
+            if (!contact) {
+                return res.status(400).json({
+                    errors: ['Contact doesn\'t exist.']
                 });
             }
 
             const { phone, created_at, updated_at, user_id, ...body } = req.body;
 
-            if(body.phone_number) {
+            if (body.phone_number) {
                 const formattedNumber = phoneValidation(body.phone_number, body.phone_region ? body.phone_region : 'BR');
-                
-                if(!formattedNumber) {
+
+                if (!formattedNumber) {
                     return res.status(400).json({
                         errors: ['Invalid phone number for the provided region.']
                     });
@@ -117,7 +121,7 @@ class ContactController {
                 body.phone = formattedNumber;
             }
 
-            if(body.profile_picture_id) {
+            if (body.profile_picture_id) {
                 const photo = await Photo.findOne({ where: { id: body.profile_picture_id, user_id: contact.user_id } });
 
                 if (!photo) {
@@ -131,18 +135,18 @@ class ContactController {
 
             return res.json(updatedContact);
 
-        } catch(e) {
-            return res.status(400).json({ 
-                errors: e.errors.map((err) => err.message) 
+        } catch (e) {
+            return res.status(400).json({
+                errors: e.errors.map((err) => err.message)
             });
         }
     }
 
     async delete(req, res) {
         try {
-            const contact = await Contact.findByPk(req.params.id);
+            const contact = await Contact.findOne({ where: { id: req.params.id, user_id: req.userId } });
 
-            if(!contact) {
+            if (!contact) {
                 return res.status(400).json({
                     errors: ['Contact doesn\'t exist.']
                 });
@@ -151,10 +155,10 @@ class ContactController {
             await contact.destroy();
 
             return res.json({ deleted: true });
-            
-        } catch(e) {
-            return res.status(400).json({ 
-                errors: e.errors.map((err) => err.message) 
+
+        } catch (e) {
+            return res.status(400).json({
+                errors: e.errors.map((err) => err.message)
             });
         }
     }
