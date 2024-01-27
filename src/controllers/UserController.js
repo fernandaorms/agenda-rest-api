@@ -81,7 +81,7 @@ class UserController {
 
             const contacts = await Contact.findAll({ where: { user_id: user.id } });
 
-            if(contacts) {
+            if(contacts.length > 0) {
                 return res.status(409).json({
                     errors: ['You need to remove associated contacts before deleting your account.'] 
                 });
@@ -89,7 +89,7 @@ class UserController {
 
             await user.destroy();
 
-            return res.json(null);
+            return res.json({ delete: true });
         } catch(e) {
             return res.status(400).json({ 
                 errors: e.errors.map((err) => err.message) 
