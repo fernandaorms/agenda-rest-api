@@ -52,7 +52,6 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.removeColumn('contacts', 'user_id');
         await queryInterface.dropTable('contacts');
     }
 };
