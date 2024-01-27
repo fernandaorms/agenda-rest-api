@@ -130,6 +130,7 @@ class ContactController {
             const updatedContact = await contact.update(body);
 
             return res.json(updatedContact);
+
         } catch(e) {
             return res.status(400).json({ 
                 errors: e.errors.map((err) => err.message) 
@@ -150,6 +151,7 @@ class ContactController {
             await contact.destroy();
 
             return res.json({ deleted: true });
+            
         } catch(e) {
             return res.status(400).json({ 
                 errors: e.errors.map((err) => err.message) 
