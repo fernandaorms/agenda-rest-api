@@ -4,7 +4,7 @@ The idea of this project comes form the [js-course](https://github.com/fernandao
 The main difference here was the introduction of:
 
 1. [Multer](https://www.npmjs.com/package/multer) for handling with images uploads;
-2. [Sequelize](https://sequelize.org/docs/v6/getting-started/) for handling with relational database operations (the course uses MariaDB, by I choose to work with PostgreSQL);
+2. [Sequelize](https://sequelize.org/docs/v6/getting-started/) for handling with relational database operations (the course uses MariaDB, but I choose to work with PostgreSQL);
 3. [JSON Web Token](https://jwt.io/introduction) for managing access to protected routes of the api;
 4. Usage of tools for creating and organizing the http requests for testing the api (the courses uses Insomnia, but I choose to work with Postman);
 
